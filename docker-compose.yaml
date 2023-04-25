@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: "xian-shop"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  etcd:
+    image: quay.io/coreos/etcd:latest
+    command: etcd --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379
+    ports:
+      - "2379:2379"
+  minio:
+    image: minio/minio
+    container_name: minio_1
+    environment:
+      MINIO_ROOT_USER: liuxian
+      MINIO_ROOT_PASSWORD: xian712525
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - /Users/liuxian/minio/data
+      - /Users/liuxian/minio/config
+    command: server --console-address ':9001' /data  #指定容器中的目录 /data
+    privileged: true
+    restart: always
+
+  nsqlookupd:
+    image: nsqio/nsq
+    command: /nsqlookupd
+    ports:
+      - "4160:4160" # tcp
+      - "4161:4161" # http
+
+  nsqd:
+    image: nsqio/nsq
+    # 广播地址不填的话默认就是oshostname(或虚拟机名称)，那样 lookupd 会连接不上，所以直接写IP
+    command: /nsqd --broadcast-address=10.236.92.208 --lookupd-tcp-address=nsqlookupd:4160
+    depends_on:
+      - nsqlookupd
+    ports:
+      - "4150:4150" # tcp
+      - "4151:4151" # http
+
+  nsqadmin:
+    image: nsqio/nsq
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    depends_on:
+      - nsqlookupd
+    ports:
+      - "4171:4171" # http
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.2.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:6.2.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
