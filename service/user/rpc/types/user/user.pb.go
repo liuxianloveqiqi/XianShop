@@ -25,7 +25,7 @@ type SendCodeRep struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserPhone string `protobuf:"bytes,1,opt,name=UserPhone,proto3" json:"UserPhone,omitempty"`
+	UserPhone string `protobuf:"bytes,1,opt,name=UserPhone,proto3" json:"UserPhone,omitempty" validate:"required,phone"`
 }
 
 func (x *SendCodeRep) Reset() {

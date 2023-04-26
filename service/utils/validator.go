@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
@@ -10,6 +11,7 @@ import (
 	enTranslations "github.com/go-playground/validator/v10/translations/en"
 	zhTranslations "github.com/go-playground/validator/v10/translations/zh"
 	"reflect"
+	"regexp"
 	"strings"
 )
 
@@ -19,7 +21,7 @@ const (
 	locale        = "chinese"
 )
 
-func TransInit(ctx context.Context) {
+func TransInit(ctx context.Context) context.Context {
 	//设置支持语言
 	chinese := zh.New()
 	english := en.New()
@@ -45,10 +47,11 @@ func TransInit(ctx context.Context) {
 	}
 	ctx = context.WithValue(ctx, ValidatorKey, val)
 	ctx = context.WithValue(ctx, TranslatorKey, trans)
+	return ctx
 }
 
 func DefaultGetValidParams(ctx context.Context, params interface{}) error {
-	TransInit(ctx)
+	ctx = TransInit(ctx)
 	err := validate(ctx, params)
 	if err != nil {
 		return err
@@ -62,8 +65,11 @@ func validate(ctx context.Context, params interface{}) error {
 	if !ok {
 		return errors.New("Validator not found in context")
 	}
+	ValidPhone(val)
 	//获取翻译器
 	tran, ok := ctx.Value(TranslatorKey).(ut.Translator)
+	fmt.Println(877820942)
+	fmt.Println(val, tran)
 	if !ok {
 		return errors.New("Translator not found in context")
 	}
@@ -79,4 +85,20 @@ func validate(ctx context.Context, params interface{}) error {
 		return errors.New(strings.Join(sliceErrs, ","))
 	}
 	return nil
+}
+func ValidPhone(val *validator.Validate) {
+
+	// 注册一个 phone 验证函数
+	val.RegisterValidation("phone", func(fl validator.FieldLevel) bool {
+		phone := fl.Field().String()
+
+		// 使用正则表达式进行验证
+		pattern := `^1[3-9]\d{9}$`
+		matched, err := regexp.MatchString(pattern, phone)
+		if err != nil {
+			return false
+		}
+
+		return matched
+	})
 }
