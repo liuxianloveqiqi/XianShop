@@ -21,6 +21,7 @@ func NewSendcodeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sendcode
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
+
 }
 
 func (l *SendcodeLogic) Sendcode(req *types.RegisterByPhoneRep) (resp *types.RegisterByPhoneResply, err error) {

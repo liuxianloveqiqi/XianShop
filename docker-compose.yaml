@@ -11,9 +11,12 @@ services:
     ports:
       - "3306:3306"
   redis:
-    image: redis:latest
+    image: redis
     ports:
       - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+    command: redis-server --appendonly yes
   etcd:
     image: quay.io/coreos/etcd:latest
     command: etcd --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379

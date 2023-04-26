@@ -6,7 +6,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"gorm.io/gorm"
 	"strings"
 	"time"
 
@@ -32,7 +31,6 @@ type (
 		FindOne(ctx context.Context, id int64) (*User, error)
 		Update(ctx context.Context, data *User) error
 		Delete(ctx context.Context, id int64) error
-		FindUserBy(db *gorm.DB, field string, value interface{}) ([]User, error)
 	}
 
 	defaultUserModel struct {

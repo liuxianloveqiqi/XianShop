@@ -42,11 +42,16 @@ type (
 		UserEmail string `json:"UserEmail"` // 用户邮箱
 		UserPhone string `json:"UserPhone"` // 用户手机号
 	}
-
 	CommonResply {
 		Code    int64  `json:"Code"`
 		Message string `json:"Message"`
 		Data    string `json:"Data"`
+	}
+    TokenResply{
+		Code    int64  `json:"Code"`
+		Message string `json:"Message"`
+		AccessToken  string `json:"accessToken"`
+		RefreshToken string `json:"refreshToken"`
 	}
 )
 
@@ -64,16 +69,16 @@ service user-api {
 		summary: "用户注册"
 	)
 	@handler Register
-	post /register (RegisterReq) returns (CommonResply)
+	post /register (RegisterReq) returns (TokenResply)
 	@doc(
 		summary: "用户登录"
 	)
 	@handler Login
-	post /login (LoginReq) returns (CommonResply)
+	post /login (LoginReq) returns (TokenResply)
 }
 
 @server(
-	jwt: Auth
+	middleware: JWT // 路由中间件声明
 )
 
 service user-api {

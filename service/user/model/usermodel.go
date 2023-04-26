@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -30,7 +29,7 @@ func (m *defaultUserModel) FindUserBy(db *gorm.DB, field string, value interface
 	}
 	fmt.Println(users)
 	if len(users) == 0 {
-		return nil, errors.New("查询为空")
+		return nil, nil
 	}
 	return users, nil
 }
