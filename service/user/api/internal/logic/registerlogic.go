@@ -2,7 +2,10 @@ package logic
 
 import (
 	"XianShop/service/user/rpc/types/user"
+	"XianShop/service/utils"
 	"context"
+	"errors"
+	"github.com/google/uuid"
 
 	"XianShop/service/user/api/internal/svc"
 	"XianShop/service/user/api/internal/types"
@@ -33,7 +36,10 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.CommonResp
 	if cntErr != nil {
 		return nil, cntErr
 	}
-
+	accessTokenString, refreshTokenString := utils.GetToken(cnt.UserId, uuid.New().String())
+	if accessTokenString == "" || refreshTokenString == "" {
+		return nil, errors.New("生成jwt错误")
+	}
 	return &types.CommonResply{
 		Code:    cnt.Code,
 		Message: cnt.Message,

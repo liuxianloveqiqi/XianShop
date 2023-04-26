@@ -25,6 +25,7 @@ message CommonReply{
   int64 Code = 1;
   string Message = 2;
   string Data = 3;
+  int64 UserId=4;
 }
 
 message UserInfoReq{

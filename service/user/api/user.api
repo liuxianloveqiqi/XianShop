@@ -47,9 +47,9 @@ type (
 		Message string `json:"Message"`
 		Data    string `json:"Data"`
 	}
-    TokenResply{
-		Code    int64  `json:"Code"`
-		Message string `json:"Message"`
+	TokenResply {
+		Code         int64  `json:"Code"`
+		Message      string `json:"Message"`
 		AccessToken  string `json:"accessToken"`
 		RefreshToken string `json:"refreshToken"`
 	}
