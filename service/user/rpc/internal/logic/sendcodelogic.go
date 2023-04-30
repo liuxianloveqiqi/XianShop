@@ -1,8 +1,10 @@
 package logic
 
 import (
+	"XianShop/service/common/errorx"
 	"XianShop/service/utils"
 	"context"
+	"fmt"
 	"time"
 
 	"XianShop/service/user/rpc/internal/svc"
@@ -30,7 +32,7 @@ func (l *SendCodeLogic) SendCode(in *user.SendCodeRep) (*user.SendCodeReply, err
 
 	err := utils.DefaultGetValidParams(l.ctx, in)
 	if err != nil {
-		return nil, err
+		return nil, errorx.NewDefaultError(fmt.Sprintf("validate校验错误: %v", err))
 	}
 	l.svcCtx.Rdb.Set(l.ctx, "8888", 989890, 3*time.Minute)
 	vecode := utils.SMS(in.UserPhone, l.svcCtx.Config.Credential.SecretId, l.svcCtx.Config.Credential.SecretKey, l.ctx, l.svcCtx.Rdb)

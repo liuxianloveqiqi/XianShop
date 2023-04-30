@@ -1,10 +1,11 @@
 package logic
 
 import (
+	"XianShop/service/common/errorx"
 	"XianShop/service/user/rpc/types/user"
 	"XianShop/service/utils"
 	"context"
-	"errors"
+	"fmt"
 	"github.com/google/uuid"
 
 	"XianShop/service/user/api/internal/svc"
@@ -38,8 +39,9 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.TokenRespl
 	}
 	accessTokenString, refreshTokenString := utils.GetToken(cnt.UserId, uuid.New().String())
 	if accessTokenString == "" || refreshTokenString == "" {
-		return nil, errors.New("生成jwt错误")
+		return nil, errorx.NewDefaultError("jwt生成错误")
 	}
+	fmt.Println(cnt, 4234324324)
 	return &types.TokenResply{
 		Code:         cnt.Code,
 		Message:      cnt.Message,

@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+import "google/protobuf/timestamp.proto";
 package user;
 
 option go_package = "./user";
@@ -29,7 +29,7 @@ message CommonReply{
 }
 
 message UserInfoReq{
-  string UserIdentity = 1;
+  int64 UserId= 1;
 }
 
 service user{

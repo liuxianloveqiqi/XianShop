@@ -47,26 +47,26 @@ func (l *GithubCallbackLogic) GithubCallback() (resp *types.TokenResply, err err
 			UpdateTime: time.Now(),
 		}
 		l.svcCtx.DbEngine.Create(&user1)
-		accessTokenString, refreshTokenString := utils.GetToken(user1.Id, uuid.New().String())
+		accessTokenString, refreshTokenString := utils.GetToken(user1.UserId, uuid.New().String())
 		if accessTokenString == "" || refreshTokenString == "" {
 			return nil, errors.New("生成jwt错误")
 		}
 		return &types.TokenResply{
 			Code:         200,
 			Message:      "success!",
-			UserId:       user1.Id,
+			UserId:       user1.UserId,
 			AccessToken:  accessTokenString,
 			RefreshToken: refreshTokenString,
 		}, nil
 	}
-	accessTokenString, refreshTokenString := utils.GetToken(users[0].Id, uuid.New().String())
+	accessTokenString, refreshTokenString := utils.GetToken(users[0].UserId, uuid.New().String())
 	if accessTokenString == "" || refreshTokenString == "" {
 		return nil, errors.New("生成jwt错误")
 	}
 	return &types.TokenResply{
 		Code:         200,
 		Message:      "success!",
-		UserId:       users[0].Id,
+		UserId:       users[0].UserId,
 		AccessToken:  accessTokenString,
 		RefreshToken: refreshTokenString,
 	}, nil
