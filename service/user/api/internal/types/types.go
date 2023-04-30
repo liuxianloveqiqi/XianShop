@@ -49,6 +49,7 @@ type CommonResply struct {
 type TokenResply struct {
 	Code         int64  `json:"Code"`
 	Message      string `json:"Message"`
+	UserId       int64  `json:"userId"`
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
 }

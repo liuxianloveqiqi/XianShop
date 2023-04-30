@@ -27,6 +27,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/login",
 				Handler: LoginHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/github/login",
+				Handler: GithubLoginHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/github/callback",
+				Handler: GithubCallbackHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/account"),
 	)

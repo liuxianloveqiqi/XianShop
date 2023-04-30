@@ -50,6 +50,7 @@ type (
 	TokenResply {
 		Code         int64  `json:"Code"`
 		Message      string `json:"Message"`
+		UserId       int64  `json:"userId"`
 		AccessToken  string `json:"accessToken"`
 		RefreshToken string `json:"refreshToken"`
 	}
@@ -65,16 +66,29 @@ service user-api {
 	)
 	@handler Sendcode
 	post /sendcode (RegisterByPhoneRep) returns (RegisterByPhoneResply)
+	
 	@doc(
-		summary: "用户注册"
+		summary: "用户验证码形式注册/登陆"
 	)
 	@handler Register
 	post /register (RegisterReq) returns (TokenResply)
+	
 	@doc(
-		summary: "用户登录"
+		summary: "用户密码形式登录"
 	)
 	@handler Login
 	post /login (LoginReq) returns (TokenResply)
+	
+	@doc(
+		summary: "github第三方登陆"
+	)
+	@handler GithubLogin
+	get /github/login () returns ()
+	@doc(
+		summary: "github第三方回调"
+	)
+	@handler GithubCallback
+	get /github/callback () returns (TokenResply)
 }
 
 @server(

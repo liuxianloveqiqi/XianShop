@@ -3,10 +3,11 @@ package svc
 import (
 	"XianShop/service/common"
 	"XianShop/service/user/api/internal/config"
+	"XianShop/service/user/api/internal/middleware"
 	"XianShop/service/user/model"
 	"XianShop/service/user/rpc/userclient"
-	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/gorm"
 )
@@ -15,8 +16,8 @@ type ServiceContext struct {
 	Config    config.Config
 	DbEngine  *gorm.DB
 	UserModel model.UserModel
-	BizRedis  *redis.Redis
 	Rpc       userclient.User
+	JWT       rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -26,8 +27,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:    c,
 		UserModel: model.NewUserModel(coon, c.CacheRedis),
-		BizRedis:  redis.New(c.BizRedis.Host, redis.WithPass(c.BizRedis.Pass)),
 		Rpc:       userclient.NewUser(zrpc.MustNewClient(c.Rpc)),
 		DbEngine:  db,
+		JWT:       middleware.NewJWTMiddleware().Handle,
 	}
 }

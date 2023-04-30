@@ -27,7 +27,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 	}
 }
 
-func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.CommonResply, err error) {
+func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.TokenResply, err error) {
 	// todo: add your logic here and delete this line
 	cnt, cntErr := l.svcCtx.Rpc.Register(l.ctx, &user.RegisterReq{
 		UserPhone: req.UserPhone,
@@ -40,9 +40,11 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.CommonResp
 	if accessTokenString == "" || refreshTokenString == "" {
 		return nil, errors.New("生成jwt错误")
 	}
-	return &types.CommonResply{
-		Code:    cnt.Code,
-		Message: cnt.Message,
-		Data:    cnt.Data,
+	return &types.TokenResply{
+		Code:         cnt.Code,
+		Message:      cnt.Message,
+		UserId:       cnt.UserId,
+		AccessToken:  accessTokenString,
+		RefreshToken: refreshTokenString,
 	}, nil
 }

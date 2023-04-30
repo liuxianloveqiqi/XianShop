@@ -5,12 +5,12 @@ package user;
 option go_package = "./user";
 
 message SendCodeRep{
-  string UserPhone =1;
+  string UserPhone = 1;
 
 }
 message RegisterReq{
-  string UserPhone =1;
-  string VeCode =2;
+  string UserPhone = 1;
+  string VeCode = 2;
 }
 
 message LoginReq{
@@ -18,14 +18,14 @@ message LoginReq{
   string PassWord = 2;
 }
 message SendCodeReply{
-  string VeCode=1;
+  string VeCode = 1;
 
 }
 message CommonReply{
   int64 Code = 1;
   string Message = 2;
   string Data = 3;
-  int64 UserId=4;
+  int64 UserId = 4;
 }
 
 message UserInfoReq{

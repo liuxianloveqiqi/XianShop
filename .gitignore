@@ -1,0 +1,4 @@
+/mysql-data/
+/minio-data/
+/redis-data/
+*.yaml

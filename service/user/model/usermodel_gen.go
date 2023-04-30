@@ -44,8 +44,10 @@ type (
 		UserNick     string    `db:"user_Nick"`     // 用户昵称
 		UserFace     string    `db:"user_Face"`     // 用户头像地址
 		UserSex      int64     `db:"User_Sex"`      // 用户性别：0男，1女，2保密
-		UserEmail    string    `db:"user_Email" `   // 用户邮箱
-		UserPhone    string    `db:"user_Phone" `   // 手机号
+		UserEmail    string    `db:"user_Email"`    // 用户邮箱
+		UserPhone    string    `db:"user_Phone"`    // 手机号
+		GithubId     string    `db:"github_id"`     // github_id
+		QqId         string    `db:"qq_id"`         // qq_id
 		LoginAddress string    `db:"login_Address"` // 用户登录IP地址
 		CreateTime   time.Time `db:"create_time"`   // 创建时间
 		UpdateTime   time.Time `db:"update_time"`   // 更新时间
@@ -88,8 +90,8 @@ func (m *defaultUserModel) FindOne(ctx context.Context, id int64) (*User, error)
 func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
 	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.PassWord, data.UserNick, data.UserFace, data.UserSex, data.UserEmail, data.UserPhone, data.LoginAddress)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.PassWord, data.UserNick, data.UserFace, data.UserSex, data.UserEmail, data.UserPhone, data.GithubId, data.QqId, data.LoginAddress)
 	}, userIdKey)
 	return ret, err
 }
@@ -98,7 +100,7 @@ func (m *defaultUserModel) Update(ctx context.Context, data *User) error {
 	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.PassWord, data.UserNick, data.UserFace, data.UserSex, data.UserEmail, data.UserPhone, data.LoginAddress, data.Id)
+		return conn.ExecCtx(ctx, query, data.PassWord, data.UserNick, data.UserFace, data.UserSex, data.UserEmail, data.UserPhone, data.GithubId, data.QqId, data.LoginAddress, data.Id)
 	}, userIdKey)
 	return err
 }

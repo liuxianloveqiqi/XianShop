@@ -86,9 +86,10 @@ func validate(ctx context.Context, params interface{}) error {
 	}
 	return nil
 }
+
+// 注册一个 phone 验证函数
 func ValidPhone(val *validator.Validate) {
 
-	// 注册一个 phone 验证函数
 	val.RegisterValidation("phone", func(fl validator.FieldLevel) bool {
 		phone := fl.Field().String()
 
