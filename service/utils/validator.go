@@ -39,6 +39,21 @@ func TransInit(ctx context.Context) context.Context {
 		val.RegisterTagNameFunc(func(fld reflect.StructField) string {
 			return fld.Tag.Get("comment")
 		})
+		val.RegisterValidation("phone", func(fl validator.FieldLevel) bool {
+			phone := fl.Field().String()
+			//使用正则表达式验证手机号码
+			pattern := `^1[3456789]\d{9}$`
+			matched, _ := regexp.MatchString(pattern, phone)
+			return matched
+		})
+		zhTranslations.RegisterDefaultTranslations(val, trans)
+		val.RegisterTranslation("phone", trans, func(ut ut.Translator) error {
+			return ut.Add("phone", "{0}格式不正确，必须为手机号码", true)
+		}, func(ut ut.Translator, fe validator.FieldError) string {
+			t, _ := ut.T("phone", fe.Field())
+			return t
+		})
+
 	case "english":
 		enTranslations.RegisterDefaultTranslations(val, trans)
 		val.RegisterTagNameFunc(func(fld reflect.StructField) string {
@@ -65,10 +80,9 @@ func validate(ctx context.Context, params interface{}) error {
 	if !ok {
 		return errors.New("Validator not found in context")
 	}
-	ValidPhone(val)
+
 	//获取翻译器
 	tran, ok := ctx.Value(TranslatorKey).(ut.Translator)
-	fmt.Println(877820942)
 	fmt.Println(val, tran)
 	if !ok {
 		return errors.New("Translator not found in context")
@@ -85,21 +99,4 @@ func validate(ctx context.Context, params interface{}) error {
 		return errors.New(strings.Join(sliceErrs, ","))
 	}
 	return nil
-}
-
-// 注册一个 phone 验证函数
-func ValidPhone(val *validator.Validate) {
-
-	val.RegisterValidation("phone", func(fl validator.FieldLevel) bool {
-		phone := fl.Field().String()
-
-		// 使用正则表达式进行验证
-		pattern := `^1[3-9]\d{9}$`
-		matched, err := regexp.MatchString(pattern, phone)
-		if err != nil {
-			return false
-		}
-
-		return matched
-	})
 }

@@ -4,10 +4,10 @@ package user;
 
 option go_package = "./user";
 
-message SendCodeRep{
+message SendCodeReq{
   string UserPhone = 1;
-
 }
+
 message RegisterReq{
   string UserPhone = 1;
   string VeCode = 2;
@@ -19,7 +19,6 @@ message LoginReq{
 }
 message SendCodeReply{
   string VeCode = 1;
-
 }
 message CommonReply{
   int64 Code = 1;
@@ -33,9 +32,8 @@ message UserInfoReq{
 }
 
 service user{
-  rpc SendCode(SendCodeRep) returns (SendCodeReply);
+  rpc SendCode(SendCodeReq) returns (SendCodeReply); // 发验证码
   rpc Register(RegisterReq) returns(CommonReply);
   rpc Login(LoginReq) returns(CommonReply);
   rpc UserInfo(UserInfoReq) returns (CommonReply);
-
 }
